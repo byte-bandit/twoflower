@@ -1,0 +1,69 @@
+<div x-data="{ model: {} }" x-init="model = $router.params.id ? await loadRecordAsync('guests', $router.params.id) : {}">
+    <h1>Guest Details</h1>
+    <form onsubmit="event.preventDefault();">
+        <fieldset>
+            <legend>Personal Information</legend>
+            <label>Name</label>
+            <input type="text" name="name" x-model="model.name">
+            <label>Household</label>
+            <select x-model="model.household">
+                <option value="" disabled>Select a household</option>
+                <template x-data=" { items: {} } " x-init="items = await loadCollectionAsync('households')" x-for="item in items">
+                <option :value="item.id" x-text="item.name"></option>
+                </template>
+            </select>
+            <label>Email</label>
+            <input type="email" name="email" x-model="model.email">
+            <label>Phone</label>
+            <input type="phone" name="phone" x-model="model.phone">
+        </fieldset>
+        <fieldset>
+            <legend>Attendance status</legend>
+            <label>RSVP Status</label>
+            <select x-model="model.rsvp">
+                <option>Pending</option>
+                <option>Replied</option>
+            </select>
+            <div class="field">
+                <label>Attending?</label>
+                <label class="switch">
+                    <input type="checkbox" x-model="model.attending">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="fields">
+                <div class="field">
+                    <label>Arriving on</label>
+                    <input type="date" name="arrival" :value="model.arrival?.split(' ')[0]">
+                </div>
+                <div class="field">
+                    <label>Departing on</label>
+                    <input type="date" name="departure" :value="model.departure?.split(' ')[0]">
+                </div>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>Requirements</legend>
+            <label>Dietry Restrictions</label>
+            <select x-model="model.dietry">
+                <option>Regular</option>
+                <option>Pescetarian</option>
+                <option>Vegetarian</option>
+                <option>Vegan</option>
+            </select>
+            <label>Allergies</label>
+            <input type="text" name="allergies" x-model="model.allergies">
+            <label>Song Requests</label>
+            <input type="text" name="songs" x-model="model.songs">
+        </fieldset>
+        <fieldset>
+            <legend>Other</legend>
+            <label>Tags</label>
+            <input type="text" name="tags" x-model="model.tags">
+        </fieldset>
+    </form>
+    <div class="form controls">
+        <div x-show="$router.params.id" @click="model=updateGuestModel(model); updateRecordAsync('guests', model);" class="button">Update</div>
+        <div x-show="!$router.params.id" @click="model=updateGuestModel(model); createRecordAsync('guests', model);" class="button">Create</div>
+    </div>
+</div>

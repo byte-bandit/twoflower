@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang=en>
+    <head>
+        <meta charset=utf-8>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Cats'n'Wheels 2024</title>
+        <script src="/vendor/pocketbase@v0.15.3/pocketbase.umd.js"></script>
+        <script src="/lib/bindings.js"></script>
+        <script src="/vendor/pinecone-router-middleware-views@3.0.2/views.min.js"></script>
+        <script src="/vendor/pinecone-router@3.0.1/router.min.js"></script>
+        <script defer src="/vendor/alpinejs@v3.12.0/cdn.min.js"></script>
+        <script defer src="/vendor/notyf@v3.0.0/notyf.min.js"></script>
+        <script defer src="/lib/app.js"></script>
+
+        <link rel="stylesheet" href="/vendor/notyf@v3.0.0/notyf.min.css">
+        <link rel="stylesheet" href="/lib/app.css">
+    </head>
+    <body>
+        <div class="top right corner"></div>
+        <div class="top left corner"></div>
+        <div class="bottom left corner"></div>
+        <div class="bottom right corner"></div>
+        <div x-data>
+            <template x-route="/" x-view="/public/views/home.html"></template>
+            <template x-route="/guests" x-view="/public/views/guests.html"></template>
+            <template x-route="/guest/new" x-view="/public/views/guest.html"></template>
+            <template x-route="/guest/:id" x-view="/public/views/guest.html"></template>
+            <template x-route="/households" x-view="/public/views/households.html"></template>
+            <template x-route="/household/new" x-view="/public/views/household.html"></template>
+            <template x-route="/household/:id" x-view="/public/views/household.html"></template>
+            <template x-route="notfound" x-view="/public/views/404.html"></template>
+        </div>
+        <div id="login" x-data x-show="!$store.session">
+            <form onsubmit="event.preventDefault(); login();">
+                <input type="text" name="name" placeholder="name">
+                <input type="password" name="password" placeholder="password">
+                <input type="submit" value="Log in">
+            </form>
+        </div>
+        <div id="shell" x-data x-show="$store.session">
+            <header>
+                <span>Cats'n'Wheels 2024</span>
+                <span class="nav-open" onclick="openNav()">open</span>
+            </header>
+            <nav class="squiggle">
+                <a href="javascript:void(0)" class="close" onclick="closeNav()">&times;</a>
+                <a href="/"><ion-icon name="heart-outline"></ion-icon> Home</a>
+                <a href="/guests"><ion-icon name="people-outline"></ion-icon> Guests</a>
+                <a href="/households"><ion-icon name="home-outline"></ion-icon> Households</a>
+                <a href="#" onclick="logout()"><ion-icon name="log-out-outline"></ion-icon> Logout</a>
+            </nav>
+            <main id="app" class="squiggle"></main>
+        </div>
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            version="1.1"
+            height="0"
+            width="0"
+            >
+            <defs>
+            <filter id="squiggle">
+            <feTurbulence
+            type="fractalNoise"
+            id="turbulence"
+            baseFrequency=".05"
+            numOctaves="4"
+            />
+            <feDisplacementMap
+            id="displacement"
+            in="SourceGraphic"
+            scale="4"
+            />
+            </filter>
+            </defs>
+        </svg>
+        <script type="module" src="https://unpkg.com/ionicons@latest/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule="" src="https://unpkg.com/ionicons@latest/dist/ionicons/ionicons.js"></script>
+    </body>
+</html>

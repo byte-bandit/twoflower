@@ -1,0 +1,33 @@
+<div x-data="{ model: {} }" x-init="model = $router.params.id ? await loadRecordAsync('households', $router.params.id) : {}">
+    <h1>Household Details</h1>
+    <form onsubmit="event.preventDefault();">
+        <fieldset>
+            <legend>Household information</legend>
+            <label>Name</label>
+            <input type="text" name="name" x-model="model.name">
+            <label>Address</label>
+            <textarea name="address" x-model="model.address"></textarea>
+            <label>Origin</label>
+            <select x-model="model.origin">
+                <option>Switzerland</option>
+                <option>Germany</option>
+                <option>UK</option>
+                <option>USA</option>
+            </select>
+        </fieldset>
+        <fieldset x-show="$router.params.id">
+            <legend>Members</legend>
+            <div class="members" x-data="{ guests: {} }" x-init="guests = loadCollectionAsync('guests')">
+                <template x-for="guest in guests">
+                    <div>
+                        <input type="checkbox" name="members" :value="guest.id" :checked="guest.household == model.id" /> <span x-text="guest.name"></span>
+                    </div>
+                </template>
+            </div>
+        </fieldset>
+    </form>
+    <div class="form controls">
+        <div class="button" x-show="$router.params.id" @click="await updateGuestsFromHouseholdAsync(model); await updateRecordAsync('households', model);">Update</div>
+        <div class="button" x-show="!$router.params.id" @click="await createRecordAsync('households', model);">Create</div>
+    </div>
+</div>

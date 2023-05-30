@@ -1,0 +1,27 @@
+<div>
+    <h2>Households</h2>
+    <div x-data="{ items: loadCollectionAsync('households') }">
+        <span x-show="items.length < 1">Loading...</span>
+        <table class="households">
+            <thead>
+                <tr>
+                    <td>Name</td>
+                    <td>Address</td>
+                    <td>Origin</td>
+                </tr>
+            </thead>
+            <tbody>
+                <template x-for="item in items">
+                    <tr @click="PineconeRouter.currentContext.redirect(`/household/${item.id}`);">
+                        <td x-text="item.name"></td>
+                        <td x-text="item.address"></td>
+                        <td><span class="pill" x-text="item.origin"></span></td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+        <div class="form controls">
+            <div @click="PineconeRouter.currentContext.redirect(`/household/new`);" class="button">New...</div>
+        </div>
+    </div>
+</div>
