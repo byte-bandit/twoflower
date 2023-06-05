@@ -194,8 +194,9 @@ h1, h2, h3, h4, h5 {
 .form.controls {
     display: flex;
     justify-content: flex-end;
-    margin-top: 1rem;
-    margin-right: 1rem;
+    align-items: center;
+    margin: .25rem 0rem;
+    gap: 1rem;
 }
 
 .form.controls .button {
@@ -212,6 +213,11 @@ h1, h2, h3, h4, h5 {
 
 .form.controls .button:hover {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.form.controls input[type="search"] {
+    flex-grow: 2;
+    height: 2rem;
 }
 
 .members {
@@ -345,13 +351,13 @@ form .fields {
     gap: 1rem;
 }
 
-fieldset {
+form fieldset {
     padding: 1rem;
     margin-bottom: 3rem;
     border-radius: 4px;
 }
 
-fieldset legend {
+form fieldset legend {
     color: var(--gold-color);
     font-family: 'Ringbearer';
 }
@@ -398,12 +404,18 @@ label {
 .households {
     width: 100%;
     border-collapse:collapse;
+    margin-top: 1rem;
 }
 
-.households thead td {
+.households thead th {
     font-size: 1rem;
     font-weight: bold;
     padding-bottom: .5rem;
+    cursor: pointer;
+}
+
+.households thead th:hover {
+    color: var(--gold-color);
 }
 
 .households tbody td {

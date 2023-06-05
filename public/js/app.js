@@ -38,7 +38,7 @@ function closeNav() {
 }
 
 async function loadCollectionAsync(collection, query = {}) {
-    query.sort = '-created';
+    query.sort = query.sort ? query.sort : '-created';
 
     try {
         const records = await pb.collection(collection).getFullList(query);
@@ -97,3 +97,57 @@ function updateGuestModel(model) {
     return model;
 }
 
+function alphanumerical(prop, flip) {
+    if (flip) return (a,b) => (a[prop] > b[prop] ? -1 : a[prop] < b[prop] ? 1 : 0);
+    return (a,b) => (a[prop] < b[prop] ? -1 : a[prop] > b[prop] ? 1 : 0);
+}
+
+async function printHouseholdsAsync() {
+    const rows = await loadCollectionAsync("households", {sort: "name"});
+    const csvContent = "Address,Country\n" + rows.map(e => `"${e.address}","${e.origin}"`).join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", "addresses.csv");
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+function applyFilter(a, token) {
+    token = token.toLowerCase();
+
+    if (Array.isArray(a)) {
+        return a.filter((item) => applyFilter(item, token));
+    }
+
+    if (typeof(a) === 'object') {
+        for(pname in a) {
+            const prop = a[pname];
+            if (typeof(prop) === 'string') {
+                if (prop.toLowerCase().includes(token)) return true;
+            } 
+
+            if (typeof(prop) === 'object') {
+                if(applyFilter(prop, token)) return true;
+            } 
+
+            if (Array.isArray(prop)) {
+                if (applyFilter(prop, token).length > 0) return true;
+            }
+        }
+
+        return false;
+    }
+
+    return undefined;
+}
+
+function filterItems(items, token) {
+    if (token === '') return items;
+    if (items.length < 1) return [];
+
+    return applyFilter(items, token);
+}

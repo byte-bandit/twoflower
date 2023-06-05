@@ -1,21 +1,26 @@
 <div>
     <h2>Guests</h2>
-    <div x-data="{ items: loadCollectionAsync('guests', {expand: 'household'}) }">
+    <div x-data="{ items: [], filtered: [] }" x-init="items = filtered = await loadCollectionAsync('guests', {expand: 'household'})">
+        <fieldset>
+            <legend>Info</legend>
+            <div class="form controls">
+                <span><b x-text="filtered.length"></b> guests</span>
+                <input x-data="{ token: '' }" x-model="token" x-effect="filtered=filterItems(items, token)" type="search" placeholder="search..." />
+                <div @click="PineconeRouter.currentContext.redirect(`/guest/new`);" class="button">New...</div>
+            </div>
+        </fieldset>
         <span x-show="items.length < 1">Loading...</span>
-        <div class="form controls">
-            <div @click="PineconeRouter.currentContext.redirect(`/guest/new`);" class="button">New...</div>
-        </div>
         <table class="households">
             <thead>
                 <tr>
-                    <td>Name</td>
-                    <td>Household</td>
-                    <td>RSVP Status</td>
-                    <td>Attending?</td>
+                    <th x-data="flip=true" @click="flip=!flip;filtered.sort(alphanumerical('name', flip));">Name</th>
+                    <th x-data="flip=true" @click="flip=!flip;filtered.sort(alphanumerical('household', flip));">Household</th>
+                    <th x-data="flip=true" @click="flip=!flip;filtered.sort(alphanumerical('rsvp', flip));">RSVP Status</th>
+                    <th x-data="flip=true" @click="flip=!flip;filtered.sort(alphanumerical('attending', flip));">Attending?</th>
                 </tr>
             </thead>
             <tbody>
-                <template x-for="item in items">
+                <template x-for="item in filtered">
                     <tr @click="PineconeRouter.currentContext.redirect(`/guest/${item.id}`);">
                         <td x-text="item.name"></td>
                         <td><span x-show="item.expand.household" class="colored pill"x-text="item.expand.household?.name"></span></td>

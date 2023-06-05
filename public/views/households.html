@@ -1,17 +1,26 @@
 <div>
     <h2>Households</h2>
-    <div x-data="{ items: loadCollectionAsync('households') }">
+    <div x-data="{ items: [], filtered: [] }" x-init="items = filtered = await loadCollectionAsync('households')">
+        <fieldset>
+            <legend>Info</legend>
+            <div class="form controls">
+                <span><b x-text="filtered.length"></b> households</span>
+                <input x-data="{ token: '' }" x-model="token" x-effect="filtered=filterItems(items, token)" type="search" placeholder="search..." />
+                <div @click="await printHouseholdsAsync()" class="button">Print</div>
+                <div @click="PineconeRouter.currentContext.redirect(`/household/new`);" class="button">New...</div>
+            </div>
+        </fieldset>
         <span x-show="items.length < 1">Loading...</span>
         <table class="households">
             <thead>
                 <tr>
-                    <td>Name</td>
-                    <td>Address</td>
-                    <td>Origin</td>
+                    <th x-data="flip=true" @click="flip=!flip;filtered.sort(alphanumerical('name', flip));">Name</th>
+                    <th x-data="flip=true" @click="flip=!flip;filtered.sort(alphanumerical('address', flip));">Address</th>
+                    <th x-data="flip=true" @click="flip=!flip;filtered.sort(alphanumerical('origin', flip));">Origin</th>
                 </tr>
             </thead>
             <tbody>
-                <template x-for="item in items">
+                <template x-for="item in filtered">
                     <tr @click="PineconeRouter.currentContext.redirect(`/household/${item.id}`);">
                         <td x-text="item.name"></td>
                         <td x-text="item.address"></td>
@@ -20,8 +29,5 @@
                 </template>
             </tbody>
         </table>
-        <div class="form controls">
-            <div @click="PineconeRouter.currentContext.redirect(`/household/new`);" class="button">New...</div>
-        </div>
     </div>
 </div>
