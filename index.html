@@ -29,6 +29,7 @@
             <template x-route="/households" x-view="/public/views/households.html"></template>
             <template x-route="/household/new" x-view="/public/views/household.html"></template>
             <template x-route="/household/:id" x-view="/public/views/household.html"></template>
+            <template x-route="/accommodation" x-view="/public/views/accommodation.html"></template>
             <template x-route="notfound" x-view="/public/views/404.html"></template>
         </div>
         <div id="login" x-data x-show="!$store.session">
@@ -48,6 +49,7 @@
                 <a href="/"><ion-icon name="heart-outline"></ion-icon> Home</a>
                 <a href="/guests"><ion-icon name="people-outline"></ion-icon> Guests</a>
                 <a href="/households"><ion-icon name="home-outline"></ion-icon> Households</a>
+                <a href="/accommodation"><ion-icon name="bed"></ion-icon> Rooms</a>
                 <a href="#" onclick="logout()"><ion-icon name="log-out-outline"></ion-icon> Logout</a>
             </nav>
             <main id="app" class="squiggle"></main>

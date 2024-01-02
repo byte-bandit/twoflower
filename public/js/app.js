@@ -50,6 +50,24 @@ async function loadCollectionAsync(collection, query = {}) {
     }
 }
 
+async function loadAccommodation() {
+  var acc = await loadCollectionAsync('accommodation', {sort: 'name'});
+  const guests = await loadCollectionAsync('guests', {sort: '-accomodation', filter: "accomodation != null", expand: "accommodation"});
+
+  acc.forEach(a => {
+    var idx = 0;
+    a.guests = new Array(a.slots).fill({name: "EMPTY"})
+    guests.forEach(g => {
+      if (a.id == g.accomodation) {
+        a.guests[idx] = g
+        idx ++
+      }
+    });
+  });
+
+  return acc
+}
+
 async function loadRecordAsync(collection, id) {
     try {
         const record = await pb.collection(collection).getOne(id);

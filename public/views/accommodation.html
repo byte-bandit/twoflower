@@ -1,0 +1,16 @@
+<div>
+  <h2>Accommodation</h2>
+  <div class="cards" x-data="{ items: [], filtered: [] }" x-init="items = filtered = await loadAccommodation()">
+    <template x-for="item in filtered">
+      <div class="card">
+        <h2 x-text="item.name"></h2>
+        <span x-text="item.notes"></span>
+        <ul>
+        <template x-for="i in item.guests">
+            <li x-text="i.name"></li>
+        </template>
+        </ul>
+      </div>
+    </template>
+  </div>
+</div>
